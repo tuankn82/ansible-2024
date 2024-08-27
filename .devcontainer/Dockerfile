@@ -42,7 +42,7 @@ RUN VN=$(poetry env list | head -n 1 | cut -d ' ' -f 1) \
     && ln -s ~/.cache/pypoetry/virtualenvs/$VN /venv
 
 # install collection (to get dependencies)
-ENV COLLECTION=collections/ansible_devcontainer/tuankn/pve_cloud
+ENV COLLECTION=collections/ansible/tuankn
 
 COPY $COLLECTION/galaxy.yml .
 RUN poetry run -- ansible-galaxy collection install .
