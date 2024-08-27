@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
 
 # OCI labels
-LABEL org.opencontainers.image.source="https://github.com/tuankn/ansible_devcontainer"
-LABEL org.opencontainers.image.description="Devcontainer Ansible"
+LABEL org.opencontainers.image.source="https://github.com/tuankn82/ansible-2024"
+LABEL org.opencontainers.image.description="Ansible-2024"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 
 # install poetry for python dependencies
@@ -31,7 +31,7 @@ RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc
 RUN echo 'export VAULT_ADDR="http://vault.home.tkn:8200"' >> ~/.bashrc
 RUN echo 'export VAULT_SKIP_VERIFY=1' >> ~/.bashrc
 
-WORKDIR /workspaces/ansible-devcontainer-git
+WORKDIR /workspaces/ansible-2024
 
 # set up poetry environment
 COPY poetry.lock pyproject.toml ./
