@@ -1,0 +1,9 @@
+---
+- name: Download cloud image for pven100
+  hosts: pven100
+  gather_facts: false
+
+  tasks:
+    - name: Download cloud image
+      ansible.builtin.import_role:
+        name: tuankn.proxmox_infra.cloud_image_pven100
