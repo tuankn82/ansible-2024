@@ -1,0 +1,21 @@
+---
+api_pven100_default:
+  validate_certs: "false"
+api_create_lxc_pven100_values_defaults:
+  lxc_cores: "1"
+  lxc_cpus: "1"
+  lxc_cpuunits: "1000"
+  lxc_disk: "20"
+  lxc_ostemplate: "{{ global_lxc_ostemplate_install | default('buffalo:vztmpl/ubuntu-22.04-1_amd64.tar.gz') }}"
+  lxc_storage: "{{ global_lxc_storage_run | default('lexar') }}"
+  lxc_nameserver: "{{ global_lxc_dns_resolve | default('192.168.100.35') }}"
+  lxc_swap: "{{ global_lxc_swap | default('512') }}"
+  lxc_vmid: "{{ global_lxc_name | default('300') }}"
+  lxc_ssh_public_keys: "{{ global_lxc_ssh_key | default('ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPDoFMU9MfndmIsULoVbWW+aWy7cCltGox6/yLIkO+GF daitintdk@gmail.com')}}"
+  lxc_rootfs: "{{ global_lxc_rootfs | default('lexar:20') }}"
+  lxc_state: "{{ global_lxc_state | default('present') }}"
+  lxc_node: "{{ global_lxc_node | default('pven100') }}"
+  lxc_features:
+    - nesting=1
+    - mount-cifs,nfs
+  lxc_onboot: "{{ global_lxc_onboot | default('true') }}"

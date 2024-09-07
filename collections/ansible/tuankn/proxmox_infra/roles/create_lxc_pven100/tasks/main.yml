@@ -1,0 +1,37 @@
+---
+- name: Register api_proxmox_combined
+  ansible.builtin.import_tasks: get_api_pven100_combined.yml
+
+- name: Register values
+  ansible.builtin.set_fact:
+    api_create_lxc_pven100_values_combined: |
+      {{
+        api_create_lxc_pven100_values_defaults
+        | ansible.builtin.combine(api_create_lxc_pven100_values, recursive=true)
+      }}
+
+- name: Create lxc pven100
+  community.general.proxmox:
+    api_host: "{{ api_pven100_combined['host'] }}"
+    api_user: "{{ api_pven100_combined['user'] }}"
+    api_token_id: "{{ api_pven100_combined['token_id'] }}"
+    api_token_secret: "{{ api_pven100_combined['token_secret'] }}"
+    validate_certs: "{{ api_pven100_combined['validate_certs'] }}"
+    hostname: "{{ api_create_lxc_pven100_values_combined['lxc_hostname'] }}"
+    vmid: "{{ api_create_lxc_pven100_values_combined['lxc_vmid'] }}"
+    cpus: "{{ api_create_lxc_pven100_values_combined['lxc_cpus'] }}"
+    cores: "{{ api_create_lxc_pven100_values_combined['lxc_cores'] }}"
+    cpuunits: "{{ api_create_lxc_pven100_values_combined['lxc_cpuunits'] }}"
+    password: "{{ api_create_lxc_pven100_values_combined['lxc_password'] }}"
+    memory: "{{ api_create_lxc_pven100_values_combined['lxc_memory'] }}"
+    swap: "{{ api_create_lxc_pven100_values_combined['lxc_swap'] }}"
+    ostemplate: "{{ api_create_lxc_pven100_values_combined['lxc_ostemplate'] }}"
+    node: "{{ api_create_lxc_pven100_values_combined['lxc_node'] }}"
+    disk: "{{ api_create_lxc_pven100_values_combined['lxc_rootfs'] }}"
+    storage: "{{ api_create_lxc_pven100_values_combined['lxc_storage'] }}"
+    netif: "{{ netif_config['lxc_network'] }}"
+    nameserver: "{{ api_create_lxc_pven100_values['lxc_nameserver'] }}"
+    features: "{{ api_create_lxc_pven100_values_combined['lxc_features'] }}"
+    pubkey: "{{ api_create_lxc_pven100_values_combined['lxc_ssh_public_keys'] }}"
+    onboot: "{{ api_create_lxc_pven100_values_combined['lxc_onboot'] }}"
+    state: "{{ api_create_lxc_pven100_values_combined['lxc_state'] }}"

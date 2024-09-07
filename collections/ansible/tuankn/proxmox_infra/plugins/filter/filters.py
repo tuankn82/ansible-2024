@@ -4,7 +4,8 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List
+from typing import Dict, List, Union
+
 from ansible.errors import AnsibleFilterError
 
 
@@ -127,6 +128,42 @@ def network_config(
     }
 
     for index, network in enumerate(networks):
+        values = defaults | network
+        ret["ipconfig"][f"ipconfig{index}"] = values["ipconfig"]
+        ret["network"][f"net{index}"] = helper(**values)
+
+    return ret
+
+
+def netif_config(
+    netifs: List[Dict[str, Union[str, int]]]
+) -> Dict[str, Dict[str, str]]:
+    def helper(bridge: str, firewall: int, ipconfig: str) -> str:
+        return (
+            f"bridge={bridge},"
+            f"firewall={firewall},"
+            f"{ipconfig}"
+        )
+
+    defaults = {
+        "ipconfig": "ip=dhcp",
+        "bridge": "vmbr0",
+        "firewall": 0,
+    }
+
+    ret = {
+        "ipconfig": {
+            "ipconfig0": defaults["ipconfig"],
+        },
+        "network": {
+            "net0": helper(
+                defaults["bridge"],
+                defaults["firewall"],
+                defaults["ipconfig"]),
+        },
+    }
+
+    for index, network in enumerate(netifs):
         values = defaults | network
         ret["ipconfig"][f"ipconfig{index}"] = values["ipconfig"]
         ret["network"][f"net{index}"] = helper(**values)

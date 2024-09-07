@@ -1,0 +1,53 @@
+---
+- name: Lookup vault file path
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Register the vault file path
+      ansible.builtin.set_fact:
+        vault_file_path: "{{ playbook_dir }}/vars/vault/secret_infra.yaml"
+
+    - name: Test plugin network_config
+      ansible.builtin.debug:
+        msg: "{{ network | tuankn.proxmox_infra.netif_config }} "
+      vars:
+        network:
+          - {}
+          - ipconfig: "ip=192.168.100.12/24"
+            bridge: "vmbr0"
+    - name: Fail here
+      ansible.builtin.fail:
+
+    - name: Run create_lxc_pven100
+      ansible.builtin.import_role: tuankn.proxmox_infra.create_lxc_pven100
+      vars:
+        global_lxc_ostemplate_install: "buffalo:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst"
+        global_lxc_storage_run: "lexar"
+        api_pven100:
+          host: pven100.home.tkn
+          user: root@pam
+          token_id: ansible
+          token_secret: "{{ vault.pven100_api_token_secret }}"
+        api_create_lxc_pven100_values:
+          lxc_hostname: lxc-alpine.home.tkn
+          lxc_cores: "2"
+          lxc_cpus: "1"
+          lxc_password: "{{ vault.pven100_lxc_password }}"
+          #ostemplate: "buffalo:vztmpl/debian-12-standard_12.2-1_amd64.tar.zst"
+          lxc_disk: "8"
+          lxc_memory: "1024"
+          lxc_network:
+            - {}
+            - ipconfig: ip=192.168.100.38/24
+            - bridge: vmbr0
+        vault: |-
+          {{
+            lookup('ansible.builtin.file', hostvars['localhost']['vault_file_path'])
+            | ansible.builtin.unvault('vault')
+            | from_yaml
+          }}
+
+    # - name: Download cloud image
+    #   ansible.builtin.import_role:
+    #     name: tuankn.proxmox_infra.create_lxc_pven100
